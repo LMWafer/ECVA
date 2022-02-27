@@ -1,19 +1,18 @@
-version: "3.7"
+version: '3.7'
 
 services:
   ECVA-capture:
-    image: lmwafer/ecva-capture:0.3
     container_name: ECVA-capture
+    image: lmwafer/ecva-capture:0.5
+    restart: always
     privileged: true
     environment:
       - DISPLAY=$DISPLAY
-      - QT_X11_NO_MITSHM=1  
+      - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - /dev:/dev:ro
       - ../app:/app:rw
-      - ../wrk:/wrk:rw
-    # command: [ "/app/app" ]
+      - ../wrk:/wrk:ro
     stdin_open: true
     tty: true
 
@@ -22,5 +21,5 @@ services:
         reservations:
           devices:
           - driver: nvidia
-            device_ids: [ '0' ]
+            device_ids: ['0']
             capabilities: [gpu]

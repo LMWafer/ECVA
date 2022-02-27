@@ -11,7 +11,7 @@ RUN apt-get update && \
         python3 \
         python3-pip && \
     pip3 install --upgrade pip && \
-    pip3 install opencv-python opencv-contrib-python && \
+    pip3 install opencv-python pyrealsense2 && \
     apt-get autoremove && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
