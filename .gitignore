@@ -4,7 +4,8 @@ __pycache__/
 *$py.class
 
 # Misc
-*.png
+*.jpg
+*.json
 
 # C extensions
 *.so
