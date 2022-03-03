@@ -19,7 +19,7 @@ os.makedirs(os.path.join(save_path, "color"), exist_ok=True)
 def record():
     pipe = rs.pipeline()
     cfg = rs.config()
-    cfg.enable_stream(rs.stream.color, format=rs.format.any, framerate=60)
+    cfg.enable_stream(rs.stream.color, format=rs.format.any, width=640, height=480, framerate=60)
     pipe.start(cfg)
 
     # -> Skip 5 first frames to give the Auto-Exposure time to adjust
