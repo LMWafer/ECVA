@@ -27,9 +27,10 @@ def imu_callback(frame: rs.frame) -> None:
             if abs(previous_timestamp - current_timestamp) < 0.001:
                 return
                 
-            #-> If frameset is new, retrieve its infrared frame and convert it to opencv Mat
-            infrared_frame = frameset.get_infrared_frame()
-            img = cv2.Mat(np.asanyarray(infrared_frame.get_data()))
+            #-> If frameset is new, retrieve its color frame and convert it to opencv Mat
+            color_frame = frameset.get_color_frame()
+            img = np.asanyarray(color_frame.get_data())
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
             #-> Convert timestamp from milliseconds to seconds
             previous_timestamp = frameset.timestamp * 1e-3
@@ -43,8 +44,7 @@ def record() -> tuple:
     #-> Setup
     pipe = rs.pipeline()
     cfg = rs.config()
-    cfg.enable_stream(rs.stream.infrared, format=rs.format.y8,
-                      width=1280, height=720, framerate=30)
+    cfg.enable_stream(rs.stream.color, format=rs.format.any, width=1280, height=720, framerate=30)
     pipe.start(cfg, imu_callback)
 
     #-> Skip first frames to give the Auto-Exposure time to adjust
@@ -79,7 +79,7 @@ def saveJson(frames: list, timestamps: list) -> None:
     save_path = os.path.join(root_path, "sample/sample1")
 
     if "data" in os.listdir(bus_path):
-        shu.rmtree(root_path)
+        shu.rmtree(save_path)
     os.makedirs(os.path.join(save_path, "color"), exist_ok=True)
 
     #-> Camera device setup
