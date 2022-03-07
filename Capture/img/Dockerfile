@@ -1,5 +1,6 @@
 FROM ubuntu:20.04
 
+CMD [ "python3", "main.py" ]
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
@@ -17,3 +18,4 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app/
+COPY . .

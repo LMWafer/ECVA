@@ -3,9 +3,7 @@ version: '3.7'
 services:
   ECVA-capture:
     container_name: ECVA-capture
-    image: lmwafer/ecva-capture:0.5
-    command: [ "python3", "main.py" ]
-    # restart: always
+    image: lmwafer/ecva-capture:1.0
     privileged: true
     environment:
       - DISPLAY=$DISPLAY
@@ -13,9 +11,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev:ro
-      - ../app:/app:rw
       - ../../Bus:/Bus:rw
-      - ../wrk:/wrk:ro
     stdin_open: true
     tty: true
 
