@@ -1,6 +1,6 @@
 run:
 	sudo xhost +local:root
-	docker-compose -f img/docker-compose-run.yml up -d
+	docker-compose -f img/docker-compose-run.yml up
 
 up:
 	sudo xhost +local:root
