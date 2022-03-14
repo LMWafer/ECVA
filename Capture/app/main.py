@@ -30,7 +30,6 @@ def imu_callback(frame: rs.frame) -> None:
             #-> If frameset is new, retrieve its color frame and convert it to opencv Mat
             color_frame = frameset.get_color_frame()
             img = np.asanyarray(color_frame.get_data())
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
             #-> Convert timestamp from milliseconds to seconds
             previous_timestamp = frameset.timestamp * 1e-3
@@ -44,7 +43,7 @@ def record() -> tuple:
     #-> Setup
     pipe = rs.pipeline()
     cfg = rs.config()
-    cfg.enable_stream(rs.stream.color, format=rs.format.any, width=1280, height=720, framerate=30)
+    cfg.enable_stream(rs.stream.color, format=rs.format.bgr8, width=1280, height=720, framerate=30)
     pipe.start(cfg, imu_callback)
 
     #-> Skip first frames to give the Auto-Exposure time to adjust
@@ -91,9 +90,9 @@ def saveJson(frames: list, timestamps: list) -> None:
     profile = pipe.start(cfg)
     intrinsics = profile.get_stream(
         rs.stream.color).as_video_stream_profile().get_intrinsics()
-    intrinsics = [[intrinsics.fx, 0,             intrinsics.ppx],
-                  [0,             intrinsics.fy, intrinsics.ppy],
-                  [0,             0,             1]]
+    intrinsics = [[intrinsics.fx,   0.0,            intrinsics.ppx],
+                  [0.0,             intrinsics.fy,  intrinsics.ppy],
+                  [0.0,             0.0,            1.0]]
     
     #-> Cleanup
     pipe.stop()
@@ -124,4 +123,5 @@ def saveJson(frames: list, timestamps: list) -> None:
 
 
 if __name__ == "__main__":
-    saveJson(*record())
+    # saveJson(*record())
+    record()
