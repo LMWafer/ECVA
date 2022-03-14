@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  ecva-atlas:
+    container_name: ecva-atlas
+    image: adujardin/magicleap-atlas:latest
+    privileged: true
+    restart: always
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1 
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev:/dev:ro
+      - ../app:/app:rw
+      - ../wrk:/wrk:rw
+      - ../../Bus:/Bus:rw
+    stdin_open: true
+    tty: true
+
+    deploy:
+        resources:
+          reservations:
+            devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
