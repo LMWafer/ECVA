@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  ECVA-vslam:
+    container_name: ECVA-vslam
+    image: lmwafer/ecva-vslam:1.0
+    privileged: true
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ../../Bus:/Bus:rw
+    stdin_open: true
+    tty: true
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            device_ids: ['0']
+            capabilities: [gpu]

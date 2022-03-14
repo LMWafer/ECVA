@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  ECVA-capture:
+  ECVA-vslam:
     container_name: ECVA-vslam
     image: lmwafer/orb-slam-3-ready:1.1-ubuntu18.04
     restart: always

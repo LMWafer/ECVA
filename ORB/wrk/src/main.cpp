@@ -12,21 +12,18 @@ using namespace std;
 int main()
 {
     //-[] Load the JSON data
-    ifstream file ("info.json", ifstream::in);
+    ifstream input_file ("/Bus/data/sample/sample1/info.json", ifstream::in);
     string line;
     string content;
-    if (file.is_open())
-    {
-        while (getline(file, line)) {
-            content.append(line + "\n");
-        }
-        file.close();
+    json j;
+    if (input_file.is_open()) {
+        input_file >> j;
+        input_file.close();
     }
     else
         cout << "Unable to open file";
-    json j = json::parse(content);
     auto frames (j["frames"]);
-    cout << frames.size() << "frames found" << endl;
+    cout << frames.size() << " frames found" << endl;
 
     //-> Initialisze SLAM system object, get its map handler and image scale required
     string path_to_vocabulary = "ORBvoc.txt";
@@ -37,17 +34,15 @@ int main()
     // std::vector<MapPoint *> map;
     float imageScale = SLAM.GetImageScale();
 
-    for (int i = 0; i < frames.size(); i++)
-    {
+    for (int i = 0; i < frames.size(); i++) {
         //-> Retrieve the image and its timestamp
         cv::Mat frame(cv::imread(frames[i]["file_name_image"]));
-        float timestamp = frames[i]["timestamp"];
+        auto timestamp = frames[i]["timestamp"];
 
         cout << "Timestamp " << i << " " << timestamp << endl;
         
         //-> Rescale the image
-        if (imageScale != 1.f)
-        {
+        if (imageScale != 1.f) {
             int width = frame.cols * imageScale;
             int height = frame.rows * imageScale;
             cv::resize(frame, frame, cv::Size(width, height));
@@ -55,13 +50,15 @@ int main()
 
         //-> Feed the SLAM with the frame
         SLAM.TrackMonocular(frame, timestamp);
-
-        // cv::imshow("frame", frame);
-        cv::waitKey(60);
     }
 
     SLAM.SaveTrajectoryEuRoC("CameraTrajectory.txt");
-    SLAM.Shutdown();
-    cout << "System shutdown!\n";
+    try {
+        SLAM.Shutdown();
+    }
+    catch (exception& e ) {
+        cout << "Expected segmentation fault, system shutdown sucessful ! ; )" << endl;
+    }
+
     return EXIT_SUCCESS;
 }
